@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间,作用就是对sql进行分类化管理,理解sql隔离
+注意:使用mapper代理方法开发,namespace有特殊重要的作用,namespace等于mapper接口地址-->
+<mapper namespace="com.brokepal.nighty.sys.persist.account.RoleAuthorityDao">
+
+    <!--mapper作用:为DAO接口方法提供sql语句配置-->
+
+    <sql id="roleAuthorityColumns">
+        a.id AS "id",
+        a.role_id AS "roleId",
+        a.authority_id AS "authorityId"
+    </sql>
+
+    <sql id="roleAuthorityJoins">
+    </sql>
+
+    <select id="findList" parameterType="RoleAuthority" resultType="RoleAuthority">
+        SELECT
+        <include refid="roleAuthorityColumns"/>
+        FROM t_role_authority a
+        <include refid="roleAuthorityJoins"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND a.id LIKE CONCAT('%', #{id}, '%')
+            </if>
+            <if test="roleId != null and roleId != ''">
+                AND a.role_id LIKE CONCAT('%', #{roleId}, '%')
+            </if>
+            <if test="authorityId != null and authorityId != ''">
+                AND a.authority_id LIKE CONCAT('%', #{authorityId}, '%')
+            </if>
+        </where>
+        ORDER BY a.id
+    </select>
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间,作用就是对sql进行分类化管理,理解sql隔离
+注意:使用mapper代理方法开发,namespace有特殊重要的作用,namespace等于mapper接口地址-->
+<mapper namespace="com.brokepal.nighty.sys.persist.account.UserDao">
+
+    <!--mapper作用:为DAO接口方法提供sql语句配置-->
+
+    <sql id="userColumns">
+        a.id AS "id",
+        a.nickname AS "nickname",
+        a.username AS "username",
+        a.password AS "password",
+        a.salt AS "salt",
+        a.email AS "email",
+        a.phone AS "phone",
+        a.register_time AS "registerTime"
+    </sql>
+
+    <sql id="userJoins">
+    </sql>
+
+    <insert id="createUser" parameterType="User">
+        INSERT INTO t_user (id,nickname,username,password,email,phone,salt)
+        VALUES (#{id},#{nickname},#{username},#{password},#{email},#{phone},#{salt})
+    </insert>
+
+    <update id="updatePassword" parameterType="User">
+        UPDATE t_user
+        SET password=#{password}
+        WHERE email=#{email}
+    </update>
+
+    <select id="getUserByUsername" parameterType="String" resultType="User">
+        SELECT
+        <include refid="userColumns"/>
+        FROM t_user a
+        <include refid="userJoins"/>
+        WHERE a.username=#{username}
+    </select>
+
+    <select id="getUserByEmail" parameterType="String" resultType="User">
+        SELECT
+        <include refid="userColumns"/>
+        FROM t_user a
+        <include refid="userJoins"/>
+        WHERE a.email=#{email}
+    </select>
+
+    <select id="findList" parameterType="User" resultType="User">
+        SELECT
+        <include refid="userColumns"/>
+        FROM t_user a
+        <include refid="userJoins"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND a.username = #{username}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                AND a.username = #{username}
+            </if>
+            <if test="username != null and username != ''">
+                AND a.username = #{username}
+            </if>
+            <if test="email != null and email != ''">
+                AND a.username = #{username}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND a.username = #{username}
+            </if>
+        </where>
+    </select>
+
+</mapper>
